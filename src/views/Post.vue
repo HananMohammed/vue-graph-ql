@@ -2,7 +2,10 @@
   <div class="about">
     <h1>This is an Post page for id {{ $route.params.id }}</h1>
     <div>
-      <router-link :to="{name:'update', params : {id : $route.params.id}}"> Update</router-link>
+      <router-link :to="{ name: 'update', params: { id: $route.params.id } }">
+        Update</router-link
+      >
+      <button @click="deletePost">Delete</button>
     </div>
     <div>
       <div v-if="$apollo.queries.post.loading">loading.....</div>
@@ -61,6 +64,11 @@ export default {
   components: {
     // HelloWorld,
   },
+  data() {
+    return {
+      loading: false,
+    };
+  },
   apollo: {
     // Simple query that will update the 'hello' vue property
     post: {
@@ -77,6 +85,32 @@ export default {
           id: this.$route.params.id,
         };
       },
+    },
+  },
+  methods: {
+    deletePost() {
+      this.loading = true;
+      this.$apollo
+        .mutate({
+          mutation: gql`
+            mutation deletePost($id: ID!) {
+              deletePost(id: $id) {
+                id
+                title
+              }
+            }
+          `,
+          variables: {
+            id: this.$route.params.id,
+          },
+        })
+        .then((data) => {
+          this.loading = false;
+          this.$router.push({ name: "home" });
+        })
+        .catch((error) => {
+          this.loading = false;
+        });
     },
   },
 };
