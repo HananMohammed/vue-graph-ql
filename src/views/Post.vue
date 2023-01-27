@@ -2,6 +2,9 @@
   <div class="about">
     <h1>This is an Post page for id {{ $route.params.id }}</h1>
     <div>
+      <router-link :to="{name:'update', params : {id : $route.params.id}}"> Update</router-link>
+    </div>
+    <div>
       <div v-if="$apollo.queries.post.loading">loading.....</div>
       <div v-else>
         <div v-if="post">
