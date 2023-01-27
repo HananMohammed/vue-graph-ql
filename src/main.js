@@ -1,4 +1,25 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from "vue";
+import App from "./App.vue";
+import "./registerServiceWorker";
+import router from "./router";
+import store from "./store";
+import {
+  ApolloClient,
+  createHttpLink,
+  InMemoryCache,
+} from "@apollo/client/core";
+import { createApolloProvider } from "@vue/apollo-option";
 
-createApp(App).mount('#app')
+// HTTP connection to the API
+const httpLink = createHttpLink({ uri: "http://l.graphql.test/graphql" });
+
+// Cache implementation
+const cache = new InMemoryCache();
+
+// Create the apollo client
+const apolloClient = new ApolloClient({ link: httpLink, cache });
+
+const apolloProvider = createApolloProvider({
+  defaultClient: apolloClient,
+});
+createApp(App).use(store).use(router).use(apolloProvider).mount("#app");
