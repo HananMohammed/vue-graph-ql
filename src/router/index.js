@@ -29,10 +29,27 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/Create.vue"),
   },
   {
+    path: "/login",
+    name: "login",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Login.vue"),
+  },
+  {
+    path: "/me",
+    name: "me",
+    component: () => import(/* webpackChunkName: "about" */ "../views/Me.vue"),
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/Register.vue"),
+  },
+  {
     path: "/update/:id/edit",
     name: "update",
     component: () =>
-        import(/* webpackChunkName: "about" */ "../views/Update.vue"),
+      import(/* webpackChunkName: "about" */ "../views/Update.vue"),
   },
 ];
 

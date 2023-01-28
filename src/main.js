@@ -11,8 +11,19 @@ import {
 import VueApolloComponents from "@vue/apollo-components";
 import { createApolloProvider } from "@vue/apollo-option";
 
+function getHeaders() {
+  const headers = {};
+  const token = localStorage.getItem("apollo-token");
+  if (token) {
+    headers.authorization = `Bearer ${token}`;
+  }
+  return headers;
+}
 // HTTP connection to the API
-const httpLink = createHttpLink({ uri: "http://l.graphql.test/graphql" });
+const httpLink = createHttpLink({
+  uri: "http://l.graphql.test/graphql",
+  headers: getHeaders(),
+});
 
 // Cache implementation
 const cache = new InMemoryCache();
