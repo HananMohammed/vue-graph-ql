@@ -12,6 +12,27 @@
           }}</router-link>
         </li>
       </ul>
+      <div v-if="posts">
+        <div>{{ posts.paginatorInfo.total }} total Results</div>
+        <div>
+          Page {{ posts.paginatorInfo.currentPage }} of
+          {{ posts.paginatorInfo.lastPage }}
+        </div>
+        <div>
+          <router-link
+            :to="`/?page=${posts.paginatorInfo.currentPage - 1}`"
+            v-if="posts.paginatorInfo.currentPage !== 1"
+          >
+            Prev
+          </router-link>
+          <router-link
+            :to="`/?page=${posts.paginatorInfo.currentPage + 1}`"
+            v-if="posts.paginatorInfo.hasMorePages"
+          >
+            Next
+          </router-link>
+        </div>
+      </div>
     </div>
 
     <div>
@@ -24,6 +45,7 @@
                 paginatorInfo {
                   count
                   currentPage
+                  lastPage
                   perPage
                   total
                 }
@@ -53,7 +75,6 @@
                 }}</router-link>
               </li>
             </ul>
-
           </div>
 
           <!-- No result -->
@@ -76,23 +97,32 @@ export default {
   },
   apollo: {
     // Simple query that will update the 'hello' vue property
-    posts: gql`
-      query {
-        posts {
-          paginatorInfo {
-            count
-            currentPage
-            perPage
-            total
-          }
-          data {
-            id
-            title
-            body
+    posts: {
+      query: gql`
+        query getPosts($page: Int!) {
+          posts(page: $page) {
+            paginatorInfo {
+              count
+              currentPage
+              lastPage
+              perPage
+              total
+              hasMorePages
+            }
+            data {
+              id
+              title
+              body
+            }
           }
         }
-      }
-    `,
+      `,
+      variables() {
+        return {
+          page: this.$route.query.page ? parseInt(this.$route.query.page) : 1,
+        };
+      },
+    },
   },
 };
 </script>
